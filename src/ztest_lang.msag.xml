@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>ZTEST_LANG</ARBGB>
+    <MASTERLANG>E</MASTERLANG>
+    <STEXT>Test messages</STEXT>
+   </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEST_LANG</ARBGB>
+     <MSGNR>000</MSGNR>
+     <TEXT>Test message 1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEST_LANG</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Test message 2</TEXT>
+    </T100>
+   </T100>
+   <I18N_LANGS>
+    <LANGU>8</LANGU>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <T100T>
+    <T100T>
+     <SPRSL>8</SPRSL>
+     <ARBGB>ZTEST_LANG</ARBGB>
+     <STEXT>Тестові повідомлення</STEXT>
+    </T100T>
+    <T100T>
+     <SPRSL>D</SPRSL>
+     <ARBGB>ZTEST_LANG</ARBGB>
+     <STEXT>Test in DE</STEXT>
+    </T100T>
+   </T100T>
+   <T100_TEXTS>
+    <item>
+     <SPRSL>8</SPRSL>
+     <MSGNR>000</MSGNR>
+     <TEXT>Тестове повідомлення 1</TEXT>
+    </item>
+    <item>
+     <SPRSL>8</SPRSL>
+     <MSGNR>001</MSGNR>
+     <TEXT>Тестове повідомлення 2</TEXT>
+    </item>
+    <item>
+     <SPRSL>D</SPRSL>
+     <MSGNR>000</MSGNR>
+     <TEXT>Test text DE 1</TEXT>
+    </item>
+    <item>
+     <SPRSL>D</SPRSL>
+     <MSGNR>001</MSGNR>
+     <TEXT>Test text DE 2</TEXT>
+    </item>
+   </T100_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

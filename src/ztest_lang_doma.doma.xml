@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DOMA" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD01V>
+    <DOMNAME>ZTEST_LANG_DOMA</DOMNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DATATYPE>CHAR</DATATYPE>
+    <LENG>000010</LENG>
+    <OUTPUTLEN>000010</OUTPUTLEN>
+    <VALEXI>X</VALEXI>
+    <DDTEXT>Test DOMA EN</DDTEXT>
+   </DD01V>
+   <DD07V_TAB>
+    <DD07V>
+     <DOMNAME>ZTEST_LANG_DOMA</DOMNAME>
+     <VALPOS>0001</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>VAL1</DOMVALUE_L>
+     <DDTEXT>Value 1 EN</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZTEST_LANG_DOMA</DOMNAME>
+     <VALPOS>0002</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>VAL2</DOMVALUE_L>
+     <DDTEXT>Value 2 EN</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZTEST_LANG_DOMA</DOMNAME>
+     <VALPOS>0003</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>VAL3</DOMVALUE_L>
+     <DDTEXT>Value 3 EN</DDTEXT>
+    </DD07V>
+   </DD07V_TAB>
+   <I18N_LANGS>
+    <LANGU>8</LANGU>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD01_TEXTS>
+    <item>
+     <DDLANGUAGE>8</DDLANGUAGE>
+     <DDTEXT>Тест DOMA UK</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Test DOMA DE</DDTEXT>
+    </item>
+   </DD01_TEXTS>
+   <DD07_TEXTS>
+    <item>
+     <VALPOS>0001</VALPOS>
+     <DDLANGUAGE>8</DDLANGUAGE>
+     <DOMVALUE_L>VAL1</DOMVALUE_L>
+     <DDTEXT>Значення 1 UK</DDTEXT>
+    </item>
+    <item>
+     <VALPOS>0001</VALPOS>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DOMVALUE_L>VAL1</DOMVALUE_L>
+     <DDTEXT>Wert 1 DE</DDTEXT>
+    </item>
+    <item>
+     <VALPOS>0002</VALPOS>
+     <DDLANGUAGE>8</DDLANGUAGE>
+     <DOMVALUE_L>VAL2</DOMVALUE_L>
+     <DDTEXT>Значення 2 UK</DDTEXT>
+    </item>
+    <item>
+     <VALPOS>0002</VALPOS>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DOMVALUE_L>VAL2</DOMVALUE_L>
+     <DDTEXT>Wert 2 DE</DDTEXT>
+    </item>
+    <item>
+     <VALPOS>0003</VALPOS>
+     <DDLANGUAGE>8</DDLANGUAGE>
+     <DOMVALUE_L>VAL3</DOMVALUE_L>
+     <DDTEXT>Значення 3 UK</DDTEXT>
+    </item>
+    <item>
+     <VALPOS>0003</VALPOS>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DOMVALUE_L>VAL3</DOMVALUE_L>
+     <DDTEXT>Wert 3 DE</DDTEXT>
+    </item>
+   </DD07_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>
