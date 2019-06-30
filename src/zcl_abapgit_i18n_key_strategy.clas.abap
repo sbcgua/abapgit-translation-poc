@@ -5,6 +5,9 @@ class ZCL_ABAPGIT_I18N_KEY_STRATEGY definition
 
 public section.
 
+  constants c_id_splitter type c value ':'.
+  constants c_key_splitter type c value ','.
+
   types:
     begin of ty_segment,
         len          type i,
@@ -36,7 +39,7 @@ public section.
     importing
       !IV_LEN type I
       !IV_OPTIONAL_INT type ABAP_BOOL optional
-      !IV_ZEROPAD_INT type ABAP_BOOL optional
+      !IV_ZEROPAD_INT  type ABAP_BOOL optional
     returning
       value(RO_INSTANCE) type ref to ZCL_ABAPGIT_I18N_KEY_STRATEGY .
   methods BUILD_KEY
@@ -44,7 +47,7 @@ public section.
       !IV_SUB_TYPE type ZIF_ABAPGIT_I18N=>TY_OBJ_TYPE
       !IV_SUB_NAME type ZIF_ABAPGIT_I18N=>TY_SUB_NAME
       !IV_DEV_TYPE type ZIF_ABAPGIT_I18N=>TY_OBJ_TYPE
-      !IV_TEXTKEY type LXETEXTKEY
+      !IV_TEXTKEY  type LXETEXTKEY
       !IV_MAX_SIZE type I
     returning
       value(RV_KEY) type STRING .
@@ -54,13 +57,23 @@ public section.
     exporting
       !EV_SUB_TYPE type ZIF_ABAPGIT_I18N=>TY_OBJ_TYPE
       !EV_SUB_NAME type ZIF_ABAPGIT_I18N=>TY_SUB_NAME
-      !EV_TEXTKEY type LXETEXTKEY
-      !EV_SIZE type I .
+      !EV_DEV_TYPE type ZIF_ABAPGIT_I18N=>TY_OBJ_TYPE
+      !EV_TEXTKEY  type LXETEXTKEY
+      !EV_MAX_SIZE type I
+    raising
+      zcx_abapgit_exception .
   protected section.
   private section.
     data mv_use_sub_type type abap_bool.
     data mv_use_sub_name type abap_bool.
     data mt_segments type tt_segments.
+
+    class-methods shift_tab
+      changing
+        ct_tab type string_table
+        cv_val type string
+      raising
+        zcx_abapgit_exception.
 
 ENDCLASS.
 
@@ -90,7 +103,7 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
     data lv_temp type string.
     data lv_lines type i.
 
-    field-symbols <ls_i> like line of mt_segments.
+    field-symbols <ls_seg> like line of mt_segments.
     field-symbols <lv_tmp> like line of lt_comps2.
 
     if mv_use_sub_type = abap_true.
@@ -103,16 +116,16 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
 
     append iv_dev_type to lt_comps1.
 
-    loop at mt_segments assigning <ls_i>.
-      lv_buf = iv_textkey+lv_off(<ls_i>-len).
-      lv_off = lv_off + <ls_i>-len.
-      if <ls_i>-optional_int = abap_true.
+    loop at mt_segments assigning <ls_seg>.
+      lv_buf = iv_textkey+lv_off(<ls_seg>-len).
+      lv_off = lv_off + <ls_seg>-len.
+      if <ls_seg>-optional_int = abap_true.
         lv_int = lv_buf.
         if lv_int > 0.
           lv_temp = |{ lv_int }|.
           append lv_temp to lt_comps2.
         endif.
-      elseif <ls_i>-zeropad_int = abap_true.
+      elseif <ls_seg>-zeropad_int = abap_true.
         lv_int = lv_buf.
         lv_temp = |{ lv_int }|.
         append lv_temp to lt_comps2.
@@ -132,11 +145,11 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
       endif.
     enddo.
 
-    lv_temp = concat_lines_of( table = lt_comps2 sep = ',' ).
+    lv_temp = concat_lines_of( table = lt_comps2 sep = c_key_splitter ).
     append lv_temp to lt_comps1.
     lv_temp = |{ iv_max_size }|.
     append lv_temp to lt_comps1.
-    rv_key = concat_lines_of( table = lt_comps1 sep = ':' ).
+    rv_key = concat_lines_of( table = lt_comps1 sep = c_id_splitter ).
 
   endmethod.
 
@@ -146,6 +159,7 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
     data lt_segments type string_table.
     field-symbols <iv_s> like line of lt_segments.
 
+    data lv_sum_len type i.
     data lv_len type i.
     data lv_suffix type c.
     data lv_segment_len type i.
@@ -177,12 +191,14 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
       assert <iv_s> co '0123456789'.
 
       lv_segment_len = <iv_s>.
+      lv_sum_len = lv_sum_len + lv_segment_len.
       add_textkey_segment(
         iv_len          = lv_segment_len
         iv_optional_int = lv_optional_int
         iv_zeropad_int  = lv_zeropad_int ).
     endloop.
 
+    assert lv_sum_len <= 32. " max size of textkey
     ro_instance = me.
 
   endmethod.
@@ -199,6 +215,87 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
 
 
   method parse_key.
+
+    data lt_comps1 type string_table.
+    data lt_comps2 type string_table.
+    data lv_temp type string.
+    data lv_int type i.
+    data lv_off type i.
+    field-symbols <ls_seg> like line of mt_segments.
+
+    split iv_key at c_id_splitter into table lt_comps1.
+
+    " sub type
+    if mv_use_sub_type = abap_true.
+      shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
+      if strlen( lv_temp ) > 4.
+        zcx_abapgit_exception=>raise( 'text key parsing: wrong length of sub type' ).
+      endif.
+      ev_sub_type = lv_temp.
+    endif.
+
+    " Sub name
+    if mv_use_sub_name = abap_true.
+      shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
+      if strlen( lv_temp ) > 80.
+        zcx_abapgit_exception=>raise( 'text key parsing: wrong length of sub name' ).
+      endif.
+      ev_sub_name = lv_temp.
+    endif.
+
+    " Dev type
+    shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
+    if strlen( lv_temp ) > 4.
+      zcx_abapgit_exception=>raise( 'text key parsing: wrong length of dev type' ).
+    endif.
+    ev_dev_type = lv_temp.
+
+    " text key
+    shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
+    split lv_temp at c_key_splitter into table lt_comps2.
+    loop at mt_segments assigning <ls_seg>.
+      read table lt_comps2 index sy-tabix into lv_temp.
+      if sy-subrc > 0.
+        exit. " remaining segments are empty
+      endif.
+
+      if <ls_seg>-optional_int = abap_true.
+        if not lv_temp co '0123456789'.
+          zcx_abapgit_exception=>raise( |text key parsing: segment must be int ({ lv_temp })| ).
+        endif.
+        ev_textkey+lv_off(<ls_seg>-len) = lv_temp.
+      elseif <ls_seg>-zeropad_int = abap_true.
+        if not lv_temp co '0123456789'.
+          zcx_abapgit_exception=>raise( |text key parsing: segment must be int ({ lv_temp })| ).
+        endif.
+        unpack lv_temp to ev_textkey+lv_off(<ls_seg>-len).
+      else.
+        ev_textkey+lv_off(<ls_seg>-len) = lv_temp.
+      endif.
+      lv_off = lv_off + <ls_seg>-len.
+
+    endloop.
+
+
+    " Max length
+    shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
+    if not lv_temp co '0123456789'.
+      zcx_abapgit_exception=>raise( 'text key parsing: max size must be a number' ).
+    endif.
+    ev_max_size = lv_temp.
+
+
+  endmethod.
+
+
+  method shift_tab.
+
+    if lines( ct_tab ) = 0.
+      zcx_abapgit_exception=>raise( 'unexpected (small) number of text key segments' ).
+    endif.
+    read table ct_tab index 1 into cv_val.
+    delete ct_tab index 1.
+
   endmethod.
 
 
