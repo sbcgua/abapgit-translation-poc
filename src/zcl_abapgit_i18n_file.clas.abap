@@ -58,7 +58,7 @@ CLASS ZCL_ABAPGIT_I18N_FILE IMPLEMENTATION.
     field-symbols <text> like line of <i>-texts.
 
     loop at mt_text_objects assigning <i>.
-      lv_tmp = |{ <i>-type }:{ <i>-sub_name }:{ <i>-id }|.
+      lv_tmp = |@{ <i>-id }|.
       append lv_tmp to lt_lines.
 
       loop at <i>-texts assigning <text>.

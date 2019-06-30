@@ -2,7 +2,7 @@ interface ZIF_ABAPGIT_I18N
   public .
 
   types:
-    ty_obj_type type c length 10, " Technically should be TROBJTYPE, but potentially customly defined translations may exist too, so leave some space for them
+    ty_obj_type type c length 4,  " length(TROBJTYPE)
     ty_sub_name type c length 80, " length(SOBJ_SNAME) - length(SOBJ_NAME)
     ty_textid   type string,      " ???
 

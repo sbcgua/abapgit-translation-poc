@@ -23,6 +23,7 @@ public section.
       !IV_OBJ_NAME type SOBJ_NAME
       !IV_SUB_TYPE type TROBJTYPE optional
       !IV_SUB_NAME type ZIF_ABAPGIT_I18N=>TY_SUB_NAME optional
+      !IV_TEXTKEY_CONF type string
     returning
       value(RT_TOBJS) type ZIF_ABAPGIT_I18N=>TT_TEXT_OBJECT .
   methods WRITE
@@ -31,6 +32,7 @@ public section.
       !IV_OBJ_NAME type SOBJ_NAME
       !IV_SUB_TYPE type TROBJTYPE
       !IV_SUB_NAME type ZIF_ABAPGIT_I18N=>TY_SUB_NAME
+      !IV_TEXTKEY_CONF type string
       !IT_TOBJS type ZIF_ABAPGIT_I18N=>TT_TEXT_OBJECT .
   class-methods GET_LANG_ISO4
     importing
@@ -59,6 +61,7 @@ public section.
         iv_dev_type type trobjtype
         iv_iso4     type lxeisolang
         it_portion  type lxe_tt_pcx_s1
+        io_key_strategy type ref to zcl_abapgit_i18n_key_strategy
       changing
         ct_tobjs type zif_abapgit_i18n=>tt_text_object.
 
@@ -141,9 +144,16 @@ CLASS ZCL_ABAPGIT_I18N_LXE IMPLEMENTATION.
 
       loop at it_portion assigning <i>.
         append initial line to ct_tobjs assigning <tobj>.
+
         <tobj>-type     = iv_sub_type.
         <tobj>-sub_name = iv_sub_name.
-        <tobj>-id       = |{ iv_dev_type }:{ <i>-textkey }:{ <i>-unitmlt }|.
+        <tobj>-id       = io_key_strategy->build_key(
+          iv_sub_type = iv_sub_type
+          iv_sub_name = iv_sub_name
+          iv_dev_type = iv_dev_type
+          iv_textkey  = <i>-textkey
+          iv_max_size = <i>-unitmlt ).
+
         append initial line to <tobj>-texts assigning <text>.
         <text>-lang     = ms_orig_lang-lang.
         <text>-text     = <i>-s_text.
@@ -154,7 +164,13 @@ CLASS ZCL_ABAPGIT_I18N_LXE IMPLEMENTATION.
     if iv_iso4 <> ms_orig_lang-iso4. " Skip if only orig lang is serialized
 
       loop at it_portion assigning <i>.
-        lv_temp_id = |{ iv_dev_type }:{ <i>-textkey }:{ <i>-unitmlt }|.
+        lv_temp_id = io_key_strategy->build_key(
+          iv_sub_type = iv_sub_type
+          iv_sub_name = iv_sub_name
+          iv_dev_type = iv_dev_type
+          iv_textkey  = <i>-textkey
+          iv_max_size = <i>-unitmlt ).
+
         read table ct_tobjs with key id = lv_temp_id assigning <tobj>. " TODO speedup !
         check sy-subrc = 0. " Unexpected key ? Skip.
 
@@ -176,9 +192,15 @@ CLASS ZCL_ABAPGIT_I18N_LXE IMPLEMENTATION.
     data lt_colob type lxe_tt_colob.
     data lt_tobjs type zif_abapgit_i18n=>tt_text_object.
     data lt_tmp   type lxe_tt_pcx_s1.
+    data lo_key_strategy type ref to zcl_abapgit_i18n_key_strategy.
 
-    field-symbols <c> like line of lt_colob.
+    field-symbols <colob> like line of lt_colob.
     field-symbols <lang> like line of mt_alt_langs.
+
+    lo_key_strategy = zcl_abapgit_i18n_key_strategy=>create(
+      iv_use_sub_type = boolc( iv_sub_type is not initial )
+      iv_use_sub_name = boolc( iv_sub_name is not initial )
+      iv_textkey_config = iv_textkey_conf ).
 
     lt_colob = get_colob(
       iv_obj_type = iv_obj_type
@@ -186,7 +208,7 @@ CLASS ZCL_ABAPGIT_I18N_LXE IMPLEMENTATION.
       iv_sub_type = iv_sub_type
       iv_sub_name = iv_sub_name ).
 
-    loop at lt_colob assigning <c>.
+    loop at lt_colob assigning <colob>.
       clear lt_tobjs.
 
       loop at mt_alt_langs assigning <lang>.
@@ -195,9 +217,9 @@ CLASS ZCL_ABAPGIT_I18N_LXE IMPLEMENTATION.
           exporting
             s_lang  = ms_orig_lang-iso4
             t_lang  = <lang>-iso4
-            custmnr = <c>-custmnr
-            objtype = <c>-objtype
-            objname = <c>-objname
+            custmnr = <colob>-custmnr
+            objtype = <colob>-objtype
+            objname = <colob>-objname
           tables
             lt_pcx_s1 = lt_tmp.
 
@@ -205,9 +227,10 @@ CLASS ZCL_ABAPGIT_I18N_LXE IMPLEMENTATION.
           exporting
             iv_sub_type = iv_sub_type
             iv_sub_name = iv_sub_name
-            iv_dev_type = <c>-objtype
+            iv_dev_type = <colob>-objtype
             iv_iso4     = <lang>-iso4
             it_portion  = lt_tmp
+            io_key_strategy = lo_key_strategy
           changing
             ct_tobjs = lt_tobjs ).
 
