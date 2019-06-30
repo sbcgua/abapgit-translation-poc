@@ -228,9 +228,34 @@
     </item>
     <item>
      <ID>S</ID>
-     <KEY>P_TEST</KEY>
-     <ENTRY>Test</ENTRY>
-     <LENGTH>12</LENGTH>
+     <KEY>P_ONAME</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>19</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_OTYPE</KEY>
+     <ENTRY>Object name</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_SNAME</KEY>
+     <ENTRY>Sub type</ENTRY>
+     <LENGTH>16</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_STYPE</KEY>
+     <ENTRY>Sub name</ENTRY>
+     <LENGTH>16</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_TSTRA</KEY>
+     <ENTRY>Text key split strategy</ENTRY>
+     <LENGTH>31</LENGTH>
     </item>
    </TPOOL>
    <I18N_TPOOL>
@@ -256,9 +281,28 @@
       </item>
       <item>
        <ID>S</ID>
-       <KEY>P_TEST</KEY>
-       <ENTRY>Тест</ENTRY>
+       <KEY>P_OTYPE</KEY>
+       <ENTRY>Назва об&apos;єкту</ENTRY>
        <LENGTH>38</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>P_SNAME</KEY>
+       <ENTRY>Під тип</ENTRY>
+       <LENGTH>38</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>P_STYPE</KEY>
+       <ENTRY>Під назва</ENTRY>
+       <LENGTH>38</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>P_ONAME</KEY>
+       <ENTRY>.</ENTRY>
+       <LENGTH>19</LENGTH>
+       <SPLIT>D</SPLIT>
       </item>
      </TEXTPOOL>
     </item>
@@ -284,9 +328,28 @@
       </item>
       <item>
        <ID>S</ID>
-       <KEY>P_TEST</KEY>
-       <ENTRY>Test DE</ENTRY>
+       <KEY>P_OTYPE</KEY>
+       <ENTRY>Objectname</ENTRY>
        <LENGTH>38</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>P_SNAME</KEY>
+       <ENTRY>Untertyp</ENTRY>
+       <LENGTH>38</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>P_STYPE</KEY>
+       <ENTRY>Untername</ENTRY>
+       <LENGTH>38</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>P_ONAME</KEY>
+       <ENTRY>.</ENTRY>
+       <LENGTH>19</LENGTH>
+       <SPLIT>D</SPLIT>
       </item>
      </TEXTPOOL>
     </item>
