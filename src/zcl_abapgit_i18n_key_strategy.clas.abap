@@ -86,15 +86,15 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
     field-symbols <ls_seg> like line of mt_segments.
     field-symbols <lv_tmp> like line of lt_comps2.
 
-    if mv_use_sub_type = abap_true.
-      append iv_sub_type to lt_comps1.
-    endif.
-
-    if mv_use_sub_name = abap_true.
-      append iv_sub_name to lt_comps1.
-    endif.
-
-    append iv_dev_type to lt_comps1.
+*    if mv_use_sub_type = abap_true.
+*      append iv_sub_type to lt_comps1.
+*    endif.
+*
+*    if mv_use_sub_name = abap_true.
+*      append iv_sub_name to lt_comps1.
+*    endif.
+*
+*    append iv_dev_type to lt_comps1.
 
     loop at mt_segments assigning <ls_seg>.
       lv_buf = iv_textkey+lv_off(<ls_seg>-len).
@@ -214,30 +214,30 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
 
     split iv_key at c_id_splitter into table lt_comps1.
 
-    " sub type
-    if mv_use_sub_type = abap_true.
-      shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
-      if strlen( lv_temp ) > 4.
-        zcx_abapgit_exception=>raise( 'text key parsing: wrong length of sub type' ).
-      endif.
-      rs_key-sub_type = lv_temp.
-    endif.
-
-    " Sub name
-    if mv_use_sub_name = abap_true.
-      shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
-      if strlen( lv_temp ) > 80.
-        zcx_abapgit_exception=>raise( 'text key parsing: wrong length of sub name' ).
-      endif.
-      rs_key-sub_name = lv_temp.
-    endif.
-
-    " Dev type
-    shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
-    if strlen( lv_temp ) > 4.
-      zcx_abapgit_exception=>raise( 'text key parsing: wrong length of dev type' ).
-    endif.
-    rs_key-dev_type = lv_temp.
+*    " sub type
+*    if mv_use_sub_type = abap_true.
+*      shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
+*      if strlen( lv_temp ) > 4.
+*        zcx_abapgit_exception=>raise( 'text key parsing: wrong length of sub type' ).
+*      endif.
+*      rs_key-sub_type = lv_temp.
+*    endif.
+*
+*    " Sub name
+*    if mv_use_sub_name = abap_true.
+*      shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
+*      if strlen( lv_temp ) > 80.
+*        zcx_abapgit_exception=>raise( 'text key parsing: wrong length of sub name' ).
+*      endif.
+*      rs_key-sub_name = lv_temp.
+*    endif.
+*
+*    " Dev type
+*    shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
+*    if strlen( lv_temp ) > 4.
+*      zcx_abapgit_exception=>raise( 'text key parsing: wrong length of dev type' ).
+*    endif.
+*    rs_key-dev_type = lv_temp.
 
     " text key
     shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
