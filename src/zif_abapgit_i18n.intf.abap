@@ -16,11 +16,12 @@ interface ZIF_ABAPGIT_I18N
     tt_translation type standard table of ty_translation with key lang,
 
     begin of ty_text_object,
-      type      type ty_obj_type, " cumulative type, like DYNP
+      sub_type  type ty_obj_type, " cumulative type, like DYNP
       sub_name  type ty_sub_name, " optional subname e.g 2000 (dynp)
+      dev_type  type ty_obj_type, " e.g. SRH4
       id        type ty_textid,   " textid, specific to object, e.g. SRH4:DTXT      00001:50, where SRH4 is specific type, DTXT... text key, 50 max len
       texts     type tt_translation,
     end of ty_text_object,
-    tt_text_object type standard table of ty_text_object with key type sub_name id.
+    tt_text_object type standard table of ty_text_object with key sub_type sub_name id.
 
 endinterface.

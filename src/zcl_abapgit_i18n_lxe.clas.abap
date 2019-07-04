@@ -145,8 +145,9 @@ CLASS ZCL_ABAPGIT_I18N_LXE IMPLEMENTATION.
       loop at it_portion assigning <i>.
         append initial line to ct_tobjs assigning <tobj>.
 
-        <tobj>-type     = iv_sub_type.
+        <tobj>-sub_type = iv_sub_type.
         <tobj>-sub_name = iv_sub_name.
+        <tobj>-dev_type = iv_dev_type.
         <tobj>-id       = io_key_strategy->build_key(
           iv_sub_type = iv_sub_type
           iv_sub_name = iv_sub_name

@@ -7,10 +7,9 @@ class ltcl_i18n_key_strategy definition
   private section.
     methods build_with_zeropad for testing.
     methods build_with_optional for testing.
-    methods build_with_config for testing.
     methods build_with_remove_rows for testing.
-
     methods parse_with_zeropad for testing raising zcx_abapgit_exception.
+    methods parse_with_optional for testing raising zcx_abapgit_exception.
 endclass.
 
 class ltcl_i18n_key_strategy implementation.
@@ -20,72 +19,8 @@ class ltcl_i18n_key_strategy implementation.
     data lo_cut type ref to zcl_abapgit_i18n_key_strategy.
 
     lo_cut = zcl_abapgit_i18n_key_strategy=>create(
-      )->use_sub_type(
-      )->add_textkey_segment( iv_len = 10
-      )->add_textkey_segment( iv_len = 5 iv_zeropad_int = abap_true ).
-
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->build_key(
-        iv_sub_type = 'DYNP'
-        iv_sub_name = '2001'
-        iv_dev_type = 'SRH4'
-        iv_textkey  = 'DTXT      00001'
-        iv_max_size = 60
-      )
-      exp = 'DYNP:SRH4:DTXT,1:60' ).
-
-    lo_cut->use_sub_name( ).
-
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->build_key(
-        iv_sub_type = 'DYNP'
-        iv_sub_name = '2001'
-        iv_dev_type = 'SRH4'
-        iv_textkey  = 'DTXT      00001'
-        iv_max_size = 60
-      )
-      exp = 'DYNP:2001:SRH4:DTXT,1:60' ).
-
-  endmethod.
-
-  method build_with_optional.
-
-    data lo_cut type ref to zcl_abapgit_i18n_key_strategy.
-
-    lo_cut = zcl_abapgit_i18n_key_strategy=>create(
-      )->use_sub_type(
-      )->add_textkey_segment( iv_len = 10
-      )->add_textkey_segment( iv_len = 5 iv_optional_int = abap_true ).
-
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->build_key(
-        iv_sub_type = 'DYNP'
-        iv_sub_name = '2001'
-        iv_dev_type = 'SRH4'
-        iv_textkey  = 'DTXT      20'
-        iv_max_size = 60
-      )
-      exp = 'DYNP:SRH4:DTXT,20:60' ).
-
-    cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->build_key(
-        iv_sub_type = 'DYNP'
-        iv_sub_name = '2001'
-        iv_dev_type = 'SRH4'
-        iv_textkey  = 'DTXT'
-        iv_max_size = 60
-      )
-      exp = 'DYNP:SRH4:DTXT:60' ).
-
-  endmethod.
-
-  method build_with_config.
-
-    data lo_cut type ref to zcl_abapgit_i18n_key_strategy.
-
-    lo_cut = zcl_abapgit_i18n_key_strategy=>create(
-      )->use_sub_type(
-      )->configure_textkey( '10,5z' ).
+      iv_use_sub_type = abap_true
+      iv_textkey_config = '10,5z' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->build_key(
@@ -108,8 +43,29 @@ class ltcl_i18n_key_strategy implementation.
       exp = 'DYNP:SRH4:DTXT,0:60' ).
 
     lo_cut = zcl_abapgit_i18n_key_strategy=>create(
-      )->use_sub_type(
-      )->configure_textkey( '10,5i' ).
+      iv_use_sub_type = abap_true
+      iv_use_sub_name = abap_true
+      iv_textkey_config = '10,5z' ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->build_key(
+        iv_sub_type = 'DYNP'
+        iv_sub_name = '2001'
+        iv_dev_type = 'SRH4'
+        iv_textkey  = 'DTXT      00001'
+        iv_max_size = 60
+      )
+      exp = 'DYNP:2001:SRH4:DTXT,1:60' ).
+
+  endmethod.
+
+  method build_with_optional.
+
+    data lo_cut type ref to zcl_abapgit_i18n_key_strategy.
+
+    lo_cut = zcl_abapgit_i18n_key_strategy=>create(
+      iv_use_sub_type = abap_true
+      iv_textkey_config = '10,5i' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->build_key(
@@ -138,7 +94,7 @@ class ltcl_i18n_key_strategy implementation.
     data lo_cut type ref to zcl_abapgit_i18n_key_strategy.
 
     lo_cut = zcl_abapgit_i18n_key_strategy=>create(
-      )->configure_textkey( '2,2,2,2' ).
+      iv_textkey_config = '2,2,2,2' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->build_key(
@@ -165,114 +121,77 @@ class ltcl_i18n_key_strategy implementation.
   method parse_with_zeropad.
 
     data lo_cut type ref to zcl_abapgit_i18n_key_strategy.
+    data ls_act_key type zcl_abapgit_i18n_key_strategy=>ty_destructured_key.
+    data ls_exp_key type zcl_abapgit_i18n_key_strategy=>ty_destructured_key.
 
-    data lv_sub_type type zif_abapgit_i18n=>ty_obj_type.
-    data lv_sub_name type zif_abapgit_i18n=>ty_sub_name.
-    data lv_dev_type type zif_abapgit_i18n=>ty_obj_type.
-    data lv_textkey type lxetextkey.
-    data lv_max_size type i.
-
+    clear: ls_exp_key.
     lo_cut = zcl_abapgit_i18n_key_strategy=>create(
       iv_use_sub_type = abap_true
       iv_textkey_config = '6,5z' ).
 
-    lo_cut->parse_key(
-      exporting
-        iv_key = 'DYNP:SRH4:DTXT,10:60'
-      importing
-        ev_sub_type = lv_sub_type
-        ev_sub_name = lv_sub_name
-        ev_dev_type = lv_dev_type
-        ev_textkey = lv_textkey
-        ev_max_size = lv_max_size ).
+    ls_act_key = lo_cut->parse_key( 'DYNP:SRH4:DTXT,10:60' ).
 
-    cl_abap_unit_assert=>assert_equals( act = lv_sub_type exp = 'DYNP' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_sub_name exp = '' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_dev_type exp = 'SRH4' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_textkey  exp = 'DTXT  00010' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_max_size exp = 60 ).
+    ls_exp_key-sub_type = 'DYNP'.
+    ls_exp_key-dev_type = 'SRH4'.
+    ls_exp_key-textkey  = 'DTXT  00010'.
+    ls_exp_key-max_size = 60.
+    cl_abap_unit_assert=>assert_equals( act = ls_act_key exp = ls_exp_key ).
 
-    clear: lv_sub_type, lv_sub_name, lv_dev_type, lv_textkey, lv_max_size.
+    clear: ls_exp_key.
+    lo_cut = zcl_abapgit_i18n_key_strategy=>create(
+      iv_textkey_config = '6,5z' ).
+
+    ls_act_key = lo_cut->parse_key( 'SRH4:DTXT:60' ).
+
+    ls_exp_key-dev_type = 'SRH4'.
+    " Maybe a bug - see the somment inside parse_key
+    ls_exp_key-textkey  = 'DTXT'.
+    ls_exp_key-max_size = 60.
+    cl_abap_unit_assert=>assert_equals( act = ls_act_key exp = ls_exp_key ).
+
+  endmethod.
+
+  method parse_with_optional.
+
+    data lo_cut type ref to zcl_abapgit_i18n_key_strategy.
+    data ls_act_key type zcl_abapgit_i18n_key_strategy=>ty_destructured_key.
+    data ls_exp_key type zcl_abapgit_i18n_key_strategy=>ty_destructured_key.
+
+    clear: ls_exp_key.
     lo_cut = zcl_abapgit_i18n_key_strategy=>create(
       iv_textkey_config = '6,5i' ).
 
-    lo_cut->parse_key(
-      exporting
-        iv_key = 'SRH4:DTXT,10:60'
-      importing
-        ev_sub_type = lv_sub_type
-        ev_sub_name = lv_sub_name
-        ev_dev_type = lv_dev_type
-        ev_textkey  = lv_textkey
-        ev_max_size = lv_max_size ).
+    ls_act_key = lo_cut->parse_key( 'SRH4:DTXT,10:60' ).
 
-    cl_abap_unit_assert=>assert_equals( act = lv_sub_type exp = '' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_sub_name exp = '' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_dev_type exp = 'SRH4' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_textkey  exp = 'DTXT  10' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_max_size exp = 60 ).
+    ls_exp_key-dev_type = 'SRH4'.
+    ls_exp_key-textkey  = 'DTXT  10'.
+    ls_exp_key-max_size = 60.
+    cl_abap_unit_assert=>assert_equals( act = ls_act_key exp = ls_exp_key ).
 
-    clear: lv_sub_type, lv_sub_name, lv_dev_type, lv_textkey, lv_max_size.
+    clear: ls_exp_key.
     lo_cut = zcl_abapgit_i18n_key_strategy=>create(
       iv_use_sub_type = abap_true
       iv_use_sub_name = abap_true
       iv_textkey_config = '6,5i' ).
 
-    lo_cut->parse_key(
-      exporting
-        iv_key = 'DYNP:2001:SRH4:DTXT,10:60'
-      importing
-        ev_sub_type = lv_sub_type
-        ev_sub_name = lv_sub_name
-        ev_dev_type = lv_dev_type
-        ev_textkey  = lv_textkey
-        ev_max_size = lv_max_size ).
+    ls_act_key = lo_cut->parse_key( 'DYNP:2001:SRH4:DTXT,10:60' ).
 
-    cl_abap_unit_assert=>assert_equals( act = lv_sub_type exp = 'DYNP' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_sub_name exp = '2001' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_dev_type exp = 'SRH4' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_textkey  exp = 'DTXT  10' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_max_size exp = 60 ).
+    ls_exp_key-sub_type = 'DYNP'.
+    ls_exp_key-sub_name = '2001'.
+    ls_exp_key-dev_type = 'SRH4'.
+    ls_exp_key-textkey  = 'DTXT  10'.
+    ls_exp_key-max_size = 60.
 
-    clear: lv_sub_type, lv_sub_name, lv_dev_type, lv_textkey, lv_max_size.
+    clear: ls_exp_key.
     lo_cut = zcl_abapgit_i18n_key_strategy=>create(
       iv_textkey_config = '6,5i' ).
 
-    lo_cut->parse_key(
-      exporting
-        iv_key = 'SRH4:DTXT:60'
-      importing
-        ev_sub_type = lv_sub_type
-        ev_sub_name = lv_sub_name
-        ev_dev_type = lv_dev_type
-        ev_textkey  = lv_textkey
-        ev_max_size = lv_max_size ).
+    ls_act_key = lo_cut->parse_key( 'SRH4:DTXT:60' ).
 
-    cl_abap_unit_assert=>assert_equals( act = lv_sub_type exp = '' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_sub_name exp = '' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_dev_type exp = 'SRH4' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_textkey  exp = 'DTXT' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_max_size exp = 60 ).
-
-    clear: lv_sub_type, lv_sub_name, lv_dev_type, lv_textkey, lv_max_size.
-    lo_cut = zcl_abapgit_i18n_key_strategy=>create(
-      iv_textkey_config = '6,5z' ).
-
-    lo_cut->parse_key(
-      exporting
-        iv_key = 'SRH4:DTXT:60'
-      importing
-        ev_sub_type = lv_sub_type
-        ev_sub_name = lv_sub_name
-        ev_dev_type = lv_dev_type
-        ev_textkey  = lv_textkey
-        ev_max_size = lv_max_size ).
-
-    cl_abap_unit_assert=>assert_equals( act = lv_sub_type exp = '' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_sub_name exp = '' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_dev_type exp = 'SRH4' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_textkey  exp = 'DTXT  00000' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_max_size exp = 60 ).
+    ls_exp_key-dev_type = 'SRH4'.
+    ls_exp_key-textkey  = 'DTXT'.
+    ls_exp_key-max_size = 60.
+    cl_abap_unit_assert=>assert_equals( act = ls_act_key exp = ls_exp_key ).
 
   endmethod.
 

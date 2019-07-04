@@ -1,95 +1,75 @@
-class ZCL_ABAPGIT_I18N_KEY_STRATEGY definition
+class zcl_abapgit_i18n_key_strategy definition
   public
   final
   create private .
 
-public section.
+  public section.
 
-  constants c_id_splitter type c value ':'.
-  constants c_key_splitter type c value ','.
+    constants c_id_splitter type c value ':'.
+    constants c_key_splitter type c value ','.
 
-  types:
-    begin of ty_segment,
-        len          type i,
-        optional_int type abap_bool,
-        zeropad_int  type abap_bool,
-      end of ty_segment .
-  types:
-    tt_segments type standard table of ty_segment with default key .
+    types:
+      begin of ty_segment,
+          len          type i,
+          optional_int type abap_bool,
+          zeropad_int  type abap_bool,
+        end of ty_segment .
+    types:
+      tt_segments type standard table of ty_segment with default key .
+    types:
+      begin of ty_destructured_key,
+        sub_type type zif_abapgit_i18n=>ty_obj_type,
+        sub_name type zif_abapgit_i18n=>ty_sub_name,
+        dev_type type zif_abapgit_i18n=>ty_obj_type,
+        textkey  type lxetextkey,
+        max_size type i,
+      end of ty_destructured_key.
 
-  class-methods CREATE
-    importing
-      iv_use_sub_type type abap_bool optional
-      iv_use_sub_name type abap_bool optional
-      iv_textkey_config type string optional
-    returning
-      value(RO_INSTANCE) type ref to ZCL_ABAPGIT_I18N_KEY_STRATEGY .
-  methods USE_SUB_TYPE
-    returning
-      value(RO_INSTANCE) type ref to ZCL_ABAPGIT_I18N_KEY_STRATEGY .
-  methods USE_SUB_NAME
-    returning
-      value(RO_INSTANCE) type ref to ZCL_ABAPGIT_I18N_KEY_STRATEGY .
-  methods CONFIGURE_TEXTKEY
-    importing
-      iv_config type string
-    returning
-      value(RO_INSTANCE) type ref to ZCL_ABAPGIT_I18N_KEY_STRATEGY .
-  methods ADD_TEXTKEY_SEGMENT
-    importing
-      !IV_LEN type I
-      !IV_OPTIONAL_INT type ABAP_BOOL optional
-      !IV_ZEROPAD_INT  type ABAP_BOOL optional
-    returning
-      value(RO_INSTANCE) type ref to ZCL_ABAPGIT_I18N_KEY_STRATEGY .
-  methods BUILD_KEY
-    importing
-      !IV_SUB_TYPE type ZIF_ABAPGIT_I18N=>TY_OBJ_TYPE
-      !IV_SUB_NAME type ZIF_ABAPGIT_I18N=>TY_SUB_NAME
-      !IV_DEV_TYPE type ZIF_ABAPGIT_I18N=>TY_OBJ_TYPE
-      !IV_TEXTKEY  type LXETEXTKEY
-      !IV_MAX_SIZE type I
-    returning
-      value(RV_KEY) type STRING .
-  methods PARSE_KEY
-    importing
-      !IV_KEY type STRING
-    exporting
-      !EV_SUB_TYPE type ZIF_ABAPGIT_I18N=>TY_OBJ_TYPE
-      !EV_SUB_NAME type ZIF_ABAPGIT_I18N=>TY_SUB_NAME
-      !EV_DEV_TYPE type ZIF_ABAPGIT_I18N=>TY_OBJ_TYPE
-      !EV_TEXTKEY  type LXETEXTKEY
-      !EV_MAX_SIZE type I
-    raising
-      zcx_abapgit_exception .
-  protected section.
-  private section.
-    data mv_use_sub_type type abap_bool.
-    data mv_use_sub_name type abap_bool.
-    data mt_segments type tt_segments.
-
-    class-methods shift_tab
-      changing
-        ct_tab type string_table
-        cv_val type string
+    class-methods create
+      importing
+        iv_use_sub_type type abap_bool optional
+        iv_use_sub_name type abap_bool optional
+        iv_textkey_config type string optional
+      returning
+        value(ro_instance) type ref to zcl_abapgit_i18n_key_strategy .
+    methods build_key
+      importing
+        !iv_sub_type type zif_abapgit_i18n=>ty_obj_type
+        !iv_sub_name type zif_abapgit_i18n=>ty_sub_name
+        !iv_dev_type type zif_abapgit_i18n=>ty_obj_type
+        !iv_textkey  type lxetextkey
+        !iv_max_size type i
+      returning
+        value(rv_key) type string .
+    methods parse_key
+      importing
+        !iv_key type string
+      returning
+        value(rs_key) type ty_destructured_key
       raising
-        zcx_abapgit_exception.
+        zcx_abapgit_exception .
+    protected section.
+    private section.
+      data mv_use_sub_type type abap_bool.
+      data mv_use_sub_name type abap_bool.
+      data mt_segments type tt_segments.
+
+      methods configure_textkey
+        importing
+          iv_config type string.
+
+      class-methods shift_tab
+        changing
+          ct_tab type string_table
+          cv_val type string
+        raising
+          zcx_abapgit_exception.
 
 ENDCLASS.
 
 
 
 CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
-
-
-  method add_textkey_segment.
-    field-symbols <ls_i> like line of mt_segments.
-    append initial line to mt_segments assigning <ls_i>.
-    <ls_i>-len          = iv_len.
-    <ls_i>-optional_int = iv_optional_int.
-    <ls_i>-zeropad_int  = iv_zeropad_int.
-    ro_instance = me.
-  endmethod.
 
 
   method build_key.
@@ -165,13 +145,15 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
     data lv_segment_len type i.
     data lv_optional_int type abap_bool.
     data lv_zeropad_int type abap_bool.
+    data lv_has_zeropad type abap_bool.
+    data lv_has_optional type abap_bool.
 
-    " list of segments is separated by "," e.g. "10,5,i10"
+    " list of segments is separated by "," e.g. "10,5,10i"
     " segment format: [i|z]D+
     " i - optional int
     " z - zeropad int
     " D+ - 1 or more digits
-    " e.g.: 10, i10, z10
+    " e.g.: 10, 10i, 10z
 
     split iv_config at ',' into table lt_segments.
 
@@ -182,9 +164,11 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
       lv_suffix = substring( val = <iv_s> off = lv_len - 1 ).
 
       if lv_suffix = 'i'.
+        lv_has_optional = abap_true.
         lv_optional_int = abap_true.
         <iv_s> = substring( val = <iv_s> len = lv_len - 1 ).
       elseif lv_suffix = 'z'.
+        lv_has_zeropad = abap_true.
         lv_zeropad_int = abap_true.
         <iv_s> = substring( val = <iv_s> len = lv_len - 1 ).
       endif.
@@ -192,14 +176,17 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
 
       lv_segment_len = <iv_s>.
       lv_sum_len = lv_sum_len + lv_segment_len.
-      add_textkey_segment(
-        iv_len          = lv_segment_len
-        iv_optional_int = lv_optional_int
-        iv_zeropad_int  = lv_zeropad_int ).
+
+      field-symbols <ls_i> like line of mt_segments.
+      append initial line to mt_segments assigning <ls_i>.
+      <ls_i>-len          = lv_segment_len.
+      <ls_i>-optional_int = lv_optional_int.
+      <ls_i>-zeropad_int  = lv_zeropad_int.
     endloop.
 
     assert lv_sum_len <= 32. " max size of textkey
-    ro_instance = me.
+    assert not ( lv_has_zeropad = abap_true and lv_has_optional = abap_true ).
+    " For the parsing protection ... but improve the check later
 
   endmethod.
 
@@ -210,6 +197,8 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
     ro_instance->mv_use_sub_name = iv_use_sub_name.
     if iv_textkey_config is not initial.
       ro_instance->configure_textkey( iv_textkey_config ).
+    else.
+      ro_instance->configure_textkey( '32' ). " Use whole string, length of textkey
     endif.
   endmethod.
 
@@ -231,7 +220,7 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
       if strlen( lv_temp ) > 4.
         zcx_abapgit_exception=>raise( 'text key parsing: wrong length of sub type' ).
       endif.
-      ev_sub_type = lv_temp.
+      rs_key-sub_type = lv_temp.
     endif.
 
     " Sub name
@@ -240,7 +229,7 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
       if strlen( lv_temp ) > 80.
         zcx_abapgit_exception=>raise( 'text key parsing: wrong length of sub name' ).
       endif.
-      ev_sub_name = lv_temp.
+      rs_key-sub_name = lv_temp.
     endif.
 
     " Dev type
@@ -248,7 +237,7 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
     if strlen( lv_temp ) > 4.
       zcx_abapgit_exception=>raise( 'text key parsing: wrong length of dev type' ).
     endif.
-    ev_dev_type = lv_temp.
+    rs_key-dev_type = lv_temp.
 
     " text key
     shift_tab( changing ct_tab = lt_comps1 cv_val = lv_temp ).
@@ -257,20 +246,23 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
       read table lt_comps2 index sy-tabix into lv_temp.
       if sy-subrc > 0.
         exit. " remaining segments are empty
+        " this leaves one potential bug if there is a zeropadded segment with zero value
+        " this would mean thatthe component will be empty but the probably had "0000"
+        " hopefully zero index does not make sense and will not meet in reality
       endif.
 
       if <ls_seg>-optional_int = abap_true.
         if not lv_temp co '0123456789'.
           zcx_abapgit_exception=>raise( |text key parsing: segment must be int ({ lv_temp })| ).
         endif.
-        ev_textkey+lv_off(<ls_seg>-len) = lv_temp.
+        rs_key-textkey+lv_off(<ls_seg>-len) = lv_temp.
       elseif <ls_seg>-zeropad_int = abap_true.
         if not lv_temp co '0123456789'.
           zcx_abapgit_exception=>raise( |text key parsing: segment must be int ({ lv_temp })| ).
         endif.
-        unpack lv_temp to ev_textkey+lv_off(<ls_seg>-len).
+        unpack lv_temp to rs_key-textkey+lv_off(<ls_seg>-len).
       else.
-        ev_textkey+lv_off(<ls_seg>-len) = lv_temp.
+        rs_key-textkey+lv_off(<ls_seg>-len) = lv_temp.
       endif.
       lv_off = lv_off + <ls_seg>-len.
 
@@ -282,8 +274,7 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
     if not lv_temp co '0123456789'.
       zcx_abapgit_exception=>raise( 'text key parsing: max size must be a number' ).
     endif.
-    ev_max_size = lv_temp.
-
+    rs_key-max_size = lv_temp.
 
   endmethod.
 
@@ -296,17 +287,5 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
     read table ct_tab index 1 into cv_val.
     delete ct_tab index 1.
 
-  endmethod.
-
-
-  method use_sub_name.
-    mv_use_sub_name = abap_true.
-    ro_instance = me.
-  endmethod.
-
-
-  method use_sub_type.
-    mv_use_sub_type = abap_true.
-    ro_instance = me.
   endmethod.
 ENDCLASS.
