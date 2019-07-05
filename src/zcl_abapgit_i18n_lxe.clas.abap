@@ -3,42 +3,43 @@ class ZCL_ABAPGIT_I18N_LXE definition
   final
   create public .
 
-public section.
+  public section.
 
-  types:
-    begin of ty_lang_map,
-        lang type zif_abapgit_i18n=>ty_langid,
-        iso4 type lxeisolang,
-      end of ty_lang_map .
-  types:
-    tt_lang_map type standard table of ty_lang_map with default key .
+    types:
+      begin of ty_lang_map,
+          lang type zif_abapgit_i18n=>ty_langid,
+          iso4 type lxeisolang,
+        end of ty_lang_map .
+    types:
+      tt_lang_map type standard table of ty_lang_map with default key .
 
-  methods CONSTRUCTOR
-    importing
-      !IV_ORIG_LANG type ZIF_ABAPGIT_I18N=>TY_LANGID
-      !IT_ALT_LANGS type ZIF_ABAPGIT_I18N=>TT_LANGID .
-  methods READ
-    importing
-      !IV_OBJ_TYPE type TROBJTYPE
-      !IV_OBJ_NAME type SOBJ_NAME
-      !IV_SUB_TYPE type TROBJTYPE optional
-      !IV_SUB_NAME type ZIF_ABAPGIT_I18N=>TY_SUB_NAME optional
-      !IV_TEXTKEY_CONF type string
-    returning
-      value(RT_TOBJS) type ZIF_ABAPGIT_I18N=>TT_TEXT_OBJECT .
-  methods WRITE
-    importing
-      !IV_OBJ_TYPE type TROBJTYPE
-      !IV_OBJ_NAME type SOBJ_NAME
-      !IV_SUB_TYPE type TROBJTYPE
-      !IV_SUB_NAME type ZIF_ABAPGIT_I18N=>TY_SUB_NAME
-      !IV_TEXTKEY_CONF type string
-      !IT_TOBJS type ZIF_ABAPGIT_I18N=>TT_TEXT_OBJECT .
-  class-methods GET_LANG_ISO4
-    importing
-      !IV_SRC type TY_LANG_MAP-LANG
-    returning
-      value(RV_ISO4) type LXEISOLANG .
+    methods constructor
+      importing
+        !iv_orig_lang type zif_abapgit_i18n=>ty_langid
+        !it_alt_langs type zif_abapgit_i18n=>tt_langid .
+    methods read
+      importing
+        !iv_obj_type type trobjtype
+        !iv_obj_name type sobj_name
+        !iv_sub_type type trobjtype optional
+        !iv_sub_name type zif_abapgit_i18n=>ty_sub_name optional
+        !iv_textkey_conf type string
+      returning
+        value(rt_tobjs) type zif_abapgit_i18n=>tt_text_object .
+    methods write
+      importing
+        !iv_obj_type type trobjtype
+        !iv_obj_name type sobj_name
+        !iv_sub_type type trobjtype
+        !iv_sub_name type zif_abapgit_i18n=>ty_sub_name
+        !iv_textkey_conf type string
+        !it_tobjs type zif_abapgit_i18n=>tt_text_object .
+    class-methods get_lang_iso4
+      importing
+        !iv_src type ty_lang_map-lang
+      returning
+        value(rv_iso4) type lxeisolang .
+
   protected section.
   private section.
 
