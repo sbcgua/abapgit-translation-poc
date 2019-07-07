@@ -32,7 +32,7 @@ class zcl_abapgit_i18n_key_strategy definition
         iv_textkey_config type string optional
       returning
         value(ro_instance) type ref to zcl_abapgit_i18n_key_strategy .
-    methods build_key
+    methods build_id
       importing
         !iv_sub_type type zif_abapgit_i18n=>ty_obj_type
         !iv_sub_name type zif_abapgit_i18n=>ty_sub_name
@@ -41,7 +41,7 @@ class zcl_abapgit_i18n_key_strategy definition
         !iv_max_size type i
       returning
         value(rv_key) type string .
-    methods parse_key
+    methods parse_id
       importing
         !iv_key type string
       returning
@@ -72,7 +72,7 @@ ENDCLASS.
 CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
 
 
-  method build_key.
+  method build_id.
 
     data lv_off type i.
     data lv_buf type c length 32. " like lxetextkey
@@ -203,7 +203,7 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
   endmethod.
 
 
-  method parse_key.
+  method parse_id.
 
     data lt_comps1 type string_table.
     data lt_comps2 type string_table.

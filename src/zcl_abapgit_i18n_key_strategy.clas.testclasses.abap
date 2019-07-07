@@ -23,7 +23,7 @@ class ltcl_i18n_key_strategy implementation.
       iv_textkey_config = '10,5z' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->build_key(
+      act = lo_cut->build_id(
         iv_sub_type = 'DYNP'
         iv_sub_name = '2001'
         iv_dev_type = 'SRH4'
@@ -34,7 +34,7 @@ class ltcl_i18n_key_strategy implementation.
       exp = 'DTXT,1:60' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->build_key(
+      act = lo_cut->build_id(
         iv_sub_type = 'DYNP'
         iv_sub_name = '2001'
         iv_dev_type = 'SRH4'
@@ -50,7 +50,7 @@ class ltcl_i18n_key_strategy implementation.
       iv_textkey_config = '10,5z' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->build_key(
+      act = lo_cut->build_id(
         iv_sub_type = 'DYNP'
         iv_sub_name = '2001'
         iv_dev_type = 'SRH4'
@@ -71,7 +71,7 @@ class ltcl_i18n_key_strategy implementation.
       iv_textkey_config = '10,5i' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->build_key(
+      act = lo_cut->build_id(
         iv_sub_type = 'DYNP'
         iv_sub_name = '2001'
         iv_dev_type = 'SRH4'
@@ -82,7 +82,7 @@ class ltcl_i18n_key_strategy implementation.
       exp = 'DTXT,20:60' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->build_key(
+      act = lo_cut->build_id(
         iv_sub_type = 'DYNP'
         iv_sub_name = '2001'
         iv_dev_type = 'SRH4'
@@ -102,7 +102,7 @@ class ltcl_i18n_key_strategy implementation.
       iv_textkey_config = '2,2,2,2' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->build_key(
+      act = lo_cut->build_id(
         iv_sub_type = 'DYNP'
         iv_sub_name = '2001'
         iv_dev_type = 'SRH4'
@@ -113,7 +113,7 @@ class ltcl_i18n_key_strategy implementation.
       exp = '12,34,56,78:60' ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = lo_cut->build_key(
+      act = lo_cut->build_id(
         iv_sub_type = 'DYNP'
         iv_sub_name = '2001'
         iv_dev_type = 'SRH4'
@@ -137,7 +137,7 @@ class ltcl_i18n_key_strategy implementation.
       iv_textkey_config = '6,5z' ).
 
 *    ls_act_key = lo_cut->parse_key( 'DYNP:SRH4:DTXT,10:60' ).
-    ls_act_key = lo_cut->parse_key( 'DTXT,10:60' ).
+    ls_act_key = lo_cut->parse_id( 'DTXT,10:60' ).
 
 *    ls_exp_key-sub_type = 'DYNP'.
 *    ls_exp_key-dev_type = 'SRH4'.
@@ -150,7 +150,7 @@ class ltcl_i18n_key_strategy implementation.
       iv_textkey_config = '6,5z' ).
 
 *    ls_act_key = lo_cut->parse_key( 'SRH4:DTXT:60' ).
-    ls_act_key = lo_cut->parse_key( 'DTXT:60' ).
+    ls_act_key = lo_cut->parse_id( 'DTXT:60' ).
 
 *    ls_exp_key-dev_type = 'SRH4'.
     " Maybe a bug - see the somment inside parse_key
@@ -171,7 +171,7 @@ class ltcl_i18n_key_strategy implementation.
       iv_textkey_config = '6,5i' ).
 
 *    ls_act_key = lo_cut->parse_key( 'SRH4:DTXT,10:60' ).
-    ls_act_key = lo_cut->parse_key( 'DTXT,10:60' ).
+    ls_act_key = lo_cut->parse_id( 'DTXT,10:60' ).
 
 *    ls_exp_key-dev_type = 'SRH4'.
     ls_exp_key-textkey  = 'DTXT  10'.
@@ -185,7 +185,7 @@ class ltcl_i18n_key_strategy implementation.
       iv_textkey_config = '6,5i' ).
 
 *    ls_act_key = lo_cut->parse_key( 'DYNP:2001:SRH4:DTXT,10:60' ).
-    ls_act_key = lo_cut->parse_key( 'DTXT,10:60' ).
+    ls_act_key = lo_cut->parse_id( 'DTXT,10:60' ).
 
 *    ls_exp_key-sub_type = 'DYNP'.
 *    ls_exp_key-sub_name = '2001'.
@@ -198,7 +198,7 @@ class ltcl_i18n_key_strategy implementation.
       iv_textkey_config = '6,5i' ).
 
 *    ls_act_key = lo_cut->parse_key( 'SRH4:DTXT:60' ).
-    ls_act_key = lo_cut->parse_key( 'DTXT:60' ).
+    ls_act_key = lo_cut->parse_id( 'DTXT:60' ).
 
 *    ls_exp_key-dev_type = 'SRH4'.
     ls_exp_key-textkey  = 'DTXT'.

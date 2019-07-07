@@ -149,7 +149,7 @@ CLASS ZCL_ABAPGIT_I18N_LXE IMPLEMENTATION.
         <tobj>-sub_type = iv_sub_type.
         <tobj>-sub_name = iv_sub_name.
         <tobj>-dev_type = iv_dev_type.
-        <tobj>-id       = io_key_strategy->build_key(
+        <tobj>-id       = io_key_strategy->build_id(
           iv_sub_type = iv_sub_type
           iv_sub_name = iv_sub_name
           iv_dev_type = iv_dev_type
@@ -166,7 +166,7 @@ CLASS ZCL_ABAPGIT_I18N_LXE IMPLEMENTATION.
     if iv_iso4 <> ms_orig_lang-iso4. " Skip if only orig lang is serialized
 
       loop at it_portion assigning <i>.
-        lv_temp_id = io_key_strategy->build_key(
+        lv_temp_id = io_key_strategy->build_id(
           iv_sub_type = iv_sub_type
           iv_sub_name = iv_sub_name
           iv_dev_type = iv_dev_type
@@ -245,5 +245,48 @@ CLASS ZCL_ABAPGIT_I18N_LXE IMPLEMENTATION.
 
 
   method write.
+
+    data lo_key_strategy type ref to zcl_abapgit_i18n_key_strategy.
+    data lt_dev_types type standard table of zif_abapgit_i18n=>ty_obj_type with default key.
+    data lv_dev_type like line of lt_dev_types.
+
+    field-symbols <ls_tobj> like line of it_tobjs.
+
+    lo_key_strategy = zcl_abapgit_i18n_key_strategy=>create(
+      iv_use_sub_type = boolc( iv_sub_type is not initial )
+      iv_use_sub_name = boolc( iv_sub_name is not initial )
+      iv_textkey_config = iv_textkey_conf ).
+
+    " Validate and collect
+    loop at it_tobjs assigning <ls_tobj>.
+      if <ls_tobj>-sub_type <> iv_sub_type or <ls_tobj>-sub_name <> iv_sub_name.
+        " TODO error
+      endif.
+      assert <ls_tobj>-dev_type is not initial.
+      assert <ls_tobj>-id is not initial.
+      assert <ls_tobj>-texts is not initial.
+
+*      append <ls_objs>-dev_type to lt_dev_types.
+    endloop.
+
+    sort lt_dev_types.
+    delete adjacent duplicates from lt_dev_types.
+
+    loop at lt_dev_types into lv_dev_type. " = Colob
+
+*        call function 'LXE_OBJ_TEXT_PAIR_WRITE'
+*          exporting
+*            s_lang  = ms_orig_lang-iso4
+*            t_lang  = <lang>-iso4
+*            custmnr = <colob>-custmnr
+*            objtype = <colob>-objtype
+*            objname = <colob>-objname
+*          tables
+*            lt_pcx_s1 = lt_tmp.
+
+
+    endloop.
+
+
   endmethod.
 ENDCLASS.

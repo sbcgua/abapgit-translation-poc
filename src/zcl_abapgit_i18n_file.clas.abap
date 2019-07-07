@@ -205,9 +205,15 @@ CLASS ZCL_ABAPGIT_I18N_FILE IMPLEMENTATION.
         if strlen( iv_content ) > 4.
           zcx_abapgit_exception=>raise( |i18n parsing: devtype length > 4 "{ iv_content }"| ).
         endif.
+        if iv_content is initial.
+          zcx_abapgit_exception=>raise( |i18n parsing: devtype cannot be empty| ).
+        endif.
         ev_text_object_key-dev_type = iv_content.
 
       when c_line_type-text_key.
+        if iv_content is initial.
+          zcx_abapgit_exception=>raise( |i18n parsing: textkey cannot be empty| ).
+        endif.
         ev_text_object_key-id = iv_content.
 
       when c_line_type-text.
