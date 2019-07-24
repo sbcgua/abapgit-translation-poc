@@ -73,11 +73,11 @@ class lcl_app implementation.
       iv_obj_name     = 'ZTEST_LANG' ).
     io_container->put( lt_texts ).
 
-    lt_texts = io_lxe->read(
-      iv_obj_type     = 'MSAG'
-      iv_textkey_conf = '10,5z'
-      iv_obj_name     = 'ZTEST_LANG' ).
-    io_container->put( lt_texts ).
+*    lt_texts = io_lxe->read(
+*      iv_obj_type     = 'MSAG'
+*      iv_textkey_conf = '10,5z'
+*      iv_obj_name     = 'ZTEST_LANG' ).
+*    io_container->put( lt_texts ).
 
   endmethod.
 

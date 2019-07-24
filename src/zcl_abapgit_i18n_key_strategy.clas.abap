@@ -161,6 +161,7 @@ CLASS ZCL_ABAPGIT_I18N_KEY_STRATEGY IMPLEMENTATION.
       clear: lv_segment_len, lv_optional_int, lv_zeropad_int.
       lv_len = strlen( <iv_s> ).
       assert lv_len > 0.
+      <iv_s> = to_lower( <iv_s> ).
       lv_suffix = substring( val = <iv_s> off = lv_len - 1 ).
 
       if lv_suffix = 'i'.
