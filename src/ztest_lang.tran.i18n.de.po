@@ -1,0 +1,10 @@
+﻿#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: TRAN/ZTEST_LANG/TTEXT 00001, maxlen=36
+msgid "Language test"
+msgstr ""

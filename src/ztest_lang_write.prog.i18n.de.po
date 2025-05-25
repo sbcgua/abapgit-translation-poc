@@ -1,0 +1,34 @@
+﻿#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: RPT4/ZTEST_LANG_WRITE/SELECT P_OTYPE, maxlen=30
+msgid "Object name"
+msgstr "Objectname"
+
+#: RPT4/ZTEST_LANG_WRITE/SELECT P_STYPE, maxlen=30
+msgid "Sub name"
+msgstr "Untername"
+
+#: RPT4/ZTEST_LANG_WRITE/SELECT P_SNAME, maxlen=30
+msgid "Sub type"
+msgstr "Untertyp"
+
+#: RPT4/ZTEST_LANG_WRITE/TEXT 001 20, maxlen=20
+msgid "Test text one"
+msgstr "Test text eins"
+
+#: RPT4/ZTEST_LANG_WRITE/TEXT 002 20, maxlen=20
+msgid "Test text two"
+msgstr "Test text zwei"
+
+#: RPT4/ZTEST_LANG_WRITE/SELECT P_TSTRA, maxlen=30
+msgid "Text key split strategy"
+msgstr ""
+
+#: RPT4/ZTEST_LANG_WRITE/TITLE, maxlen=70
+msgid "abapGit test new lang concept"
+msgstr "abapGit neues Sprachkonzept"
