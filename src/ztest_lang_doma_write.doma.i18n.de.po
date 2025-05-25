@@ -5,18 +5,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: DOMA/ZTEST_LANG_DOMA_WRITE/DDTEXT 00001, maxlen=60
 msgid "Test DOMA EN"
 msgstr "Test DOMA XX"
 
-#: VALU/ZTEST_LANG_DOMA_WRITE/DDTEXT 00001, maxlen=60
 msgid "Value 1 EN"
 msgstr "Wert 1 DE"
 
-#: VALU/ZTEST_LANG_DOMA_WRITE/DDTEXT 00002, maxlen=60
 msgid "Value 2 EN"
 msgstr "Wert 2 DE"
 
-#: VALU/ZTEST_LANG_DOMA_WRITE/DDTEXT 00003, maxlen=60
 msgid "Value 3 EN"
 msgstr "Wert 3 DE"

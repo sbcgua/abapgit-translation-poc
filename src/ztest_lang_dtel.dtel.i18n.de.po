@@ -5,22 +5,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: DTEL/ZTEST_LANG_DTEL/DDTEXT 00001, maxlen=60
 msgid "Test data element"
 msgstr "Test Datenelement"
 
-#: DTEL/ZTEST_LANG_DTEL/REPTEXT 00001, maxlen=10
 msgid "TestEN_H"
 msgstr "TestDE_H"
 
-#: DTEL/ZTEST_LANG_DTEL/SCRTEXT_L 00001, maxlen=20
 msgid "TestEN_L"
 msgstr "TestDE_L"
 
-#: DTEL/ZTEST_LANG_DTEL/SCRTEXT_M 00001, maxlen=15
 msgid "TestEN_M"
 msgstr "TestDE_M"
 
-#: DTEL/ZTEST_LANG_DTEL/SCRTEXT_S 00001, maxlen=10
 msgid "TestEN_S"
 msgstr "TestDE_S"

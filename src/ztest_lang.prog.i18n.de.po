@@ -5,69 +5,50 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: SRT4/ZTEST_LANG 2001/DTXT 00002, maxlen=18
 msgid "And another one"
 msgstr "Und noch einer"
 
-#: SRH4/ZTEST_LANG 2001/DTXT 00001, maxlen=60
 msgid "Custom screen 1"
 msgstr "Bildschirm 1"
 
-#: CAD4/ZTEST_LANG/DEVDOC 00001, maxlen=60
-#: CAD4/ZTEST_LANG/DEVDOC 00002, maxlen=60
-#: CAD4/ZTEST_LANG/DEVDOC 00003, maxlen=60
-#: CAD4/ZTEST_LANG/DEVDOC 00004, maxlen=60
 msgid "Main status"
 msgstr "Hauptstatus"
 
-#: CA4/ZTEST_LANG/B_MENU 00003, maxlen=40
 msgid "Menu EN"
 msgstr "Menu DE"
 
-#: RPT4/ZTEST_LANG/SELECT P_OTYPE, maxlen=30
 msgid "Object name"
 msgstr "Objectname"
 
-#: CA4/ZTEST_LANG/B_MENU 00001, maxlen=40
 msgid "Sub menu 1 EN"
 msgstr "Untermenü 1 DE"
 
-#: CA4/ZTEST_LANG/B_MENU 00002, maxlen=40
 msgid "Sub menu 2 EN"
 msgstr "Untermenü 2 DE"
 
-#: RPT4/ZTEST_LANG/SELECT P_STYPE, maxlen=30
 msgid "Sub name"
 msgstr "Untername"
 
-#: RPT4/ZTEST_LANG/SELECT P_SNAME, maxlen=30
 msgid "Sub type"
 msgstr "Untertyp"
 
-#: RPT4/ZTEST_LANG/TEXT 001 20, maxlen=20
 msgid "Test text one"
 msgstr "Test text eins"
 
-#: RPT4/ZTEST_LANG/TEXT 002 20, maxlen=20
 msgid "Test text two"
 msgstr "Test text zwei"
 
-#: RPT4/ZTEST_LANG/SELECT P_TSTRA, maxlen=30
 msgid "Text key split strategy"
 msgstr ""
 
-#: SRT4/ZTEST_LANG 2001/DTXT 00001, maxlen=18
 msgid "This is an EN text"
 msgstr "Das is ein DE text"
 
-#: CA4/ZTEST_LANG/C_BUTTON 00004, maxlen=40
 msgid "Toolbar EN"
 msgstr "Toolbar DE"
 
-#: CA4/ZTEST_LANG/D_QUICK 00005, maxlen=60
 msgid "Toolbar Info EN"
 msgstr "Toolbar Info DE"
 
-#: RPT4/ZTEST_LANG/TITLE, maxlen=70
 msgid "abapGit test new lang concept"
 msgstr "abapGit neues Sprachkonzept"
